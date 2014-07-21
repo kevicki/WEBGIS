@@ -1,0 +1,240 @@
+<%@ page pageEncoding="UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>WebGis</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">   
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="resource/css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/gis.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/operatingConfirm.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/poplayerRight.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/polygonlayer.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/jquery-ui-1.10.3.custom.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/leftTopCommonInformation.css" />
+	<link rel="stylesheet" type="text/css" href="resource/css/jquery.selectBoxIt.css" />
+    <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3&sensor=false"></script>-->
+    <script type="text/javascript">
+        GISCBBCulture = 'en';
+        function initializeMap(){
+            BASEMAP.changeMap(0,'mapDiv1','','');
+        }
+    </script>
+    <script type="text/javascript" src="/GisServer/jquery/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/GisServer/gisMain.js"></script>
+	<script type="text/javascript" src="js/jquery.form.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script type="text/javascript" src="js/gis.js"></script>
+	<script type="text/javascript" src="js/gisTopicSelect.js"></script>
+	<script type="text/javascript" src="js/baseMap.js"></script>
+	<script type="text/javascript" src="js/polygonlayer.js"></script>
+	<script type="text/javascript" src="js/operatingConfirm.js"></script>
+	<script type="text/javascript" src="js/poplayerRight.js"></script>
+	<script type="text/javascript" src="js/gisTools.js"></script>
+	<script type="text/javascript" src="js/gisNe.js"></script>
+	<script type="text/javascript" src="js/gisEvent.js"></script><!-- 事件 -->
+	<script type="text/javascript" src="js/gisGrid.js"></script>
+	<script type="text/javascript" src="js/giscellNorm.js"></script>
+	<script type="text/javascript" src="js/gisCell.js"></script>
+	<script type="text/javascript" src="js/gisCellCover.js"></script>
+	<script type="text/javascript" src="js/sitesDistance.js"></script>
+	<script type="text/javascript" src="js/exportData.js"></script>
+	<script type="text/javascript" src="js/traceback.js"></script>
+	<script type="text/javascript" src="js/gisRaster.js"></script>
+	<script type="text/javascript" src="js/gisMapSetting.js"></script>
+	<script type="text/javascript" src="js/gisRoundedGrid.js"></script>
+	<script type="text/javascript" src="js/gisLayerLevelSetting.js"></script>
+	<script type="text/javascript" src="js/colorselect.js"></script>
+	<script type="text/javascript" src="js/jquery.selectBoxIt.js"></script>
+	<script type="text/javascript" src="js/CDialog.js"></script>
+	<script type="text/javascript" src="js/customerGraphSetting.js"></script>
+  </head>
+  
+  <body style="background-color: #63B8FF;">
+  <div style = "height: 100%; width: 100%;">
+  	<div class = "gis">
+		<!--地图 -->
+		<div class="gisMap" id="mapDiv1"></div>
+
+		<div class="meun">
+			<div class="everyOne gisStyleGray mapAliquots">
+				<div class ="iconDiv mapAliquotsIcon"><img name="CurMapAliquots" title="地图四等分" src="resource/img/iconBlue/mapOne.png"></div>
+				<div class="mapAliquotsCon">
+					<div class="mapAliquotsSwitch">
+	                   <img name="oneMap" alt="" src="resource/img/iconBlue/mapOne.png">
+	                </div>
+					<div class="mapAliquotsSwitch">
+	                   <img name="twoMap" alt="" src="resource/img/iconBlue/mapTwo.png">
+	                </div>
+					<div class="mapAliquotsSwitch">
+	                   <img name="fourMap" alt="" src="resource/img/iconBlue/mapFour.png">
+	                </div>
+					<div class="mapAliquotsSwitch">
+	                   <img name="linkOpen" alt="" src="resource/img/iconBlue/mapFour.png">
+	                </div>
+				</div>
+			</div>
+			<div class="everyOne gisStyleGray">
+				<div class ="iconDiv"><img title="业务图层" src="resource/img/iconBlue/business_layer.png"></div>
+				<div class="con">
+					<div class="meunHead">
+						<div class = "headLeft"><img src="resource/img/iconBlue/business_layer.png">&nbsp;业务图层</div>
+						<div class = "headRight"></div>
+					</div>
+					<div class = "meunBody busLayer">
+						<div class="layerCon"></div>
+						<div class="layerSetting">
+							<div class="settingEveryOne">
+								<img name="layerLevel" title="图层设置" src="resource/img/iconBlue/map_set.png">
+							</div>
+							<div class="settingEveryOne opacity">
+								<label>透明度：</label>
+								<div class="opacityNum">100%</div>
+								<div class="opacityPic">
+									<div id="layerOpacity"></div>
+								</div>
+							</div>
+							<div class="settingEveryOne">
+								<img name="nephogram" title="显示云图" src="resource/img/iconBlue/could_picture.png">
+								<img name="closeLayer" title="删除图层" src="resource/img/iconBlue/closeLayer.png">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="everyOne gisStyleGray">
+				<div class ="iconDiv"><img title="地图工具" src="resource/img/iconBlue/map_tool.png"></div>
+				<div class="con">
+					<div class="meunHead">
+						<div class = "headLeft"><img src="resource/img/iconBlue/map_tool.png">&nbsp;地图工具</div>
+						<div class = "headRight"></div>
+					</div>
+					<div class = "meunBody tools">
+						<jsp:include page="jsp/gisTools.jsp" flush="true" />
+					</div>
+				</div>
+			</div>
+			<div class="everyOne gisStyleGray">
+				<div class ="iconDiv"><img title="业务工具" src="resource/img/iconBlue/business_tool.png"></div>
+				<div class="con">
+					<div class="meunHead">
+						<div class = "headLeft"><img src="resource/img/iconBlue/business_tool.png">&nbsp;业务工具</div>
+						<div class = "headRight"></div>
+					</div>
+					<div class = "meunBody busTools">
+						<jsp:include page="jsp/businessTools.jsp" flush="true" />
+					</div>
+				</div>
+			</div>
+			<div class="everyOne gisStyleGray">
+				<div class ="iconDiv"><img title="地图设置" src="resource/img/iconBlue/map_set.png"></div>
+				<div class="con">
+					<div class="meunHead">
+						<div class = "headLeft"><img title="地图设置" src="resource/img/iconBlue/map_set.png">&nbsp;地图服务器</div>
+						<div class = "headRight"></div>
+					</div>
+					<div class = "meunBody mapServerMgr">
+					   <jsp:include page="jsp/mapServerMgr.jsp" flush="true" />
+					</div>
+				</div>
+			</div>
+			
+			<div class="everyOne gisStyleGray">
+				<div class ="iconDiv"><img title="图例" src="resource/img/iconBlue/legend.png"></div>
+				<div class="con">
+					<div class="meunHead">
+						<div class = "headLeft"><img src="resource/img/iconBlue/legend.png">&nbsp;图例</div>
+						<div class = "headRight"></div>
+					</div>
+					<div class = "meunBody legendIcon">
+						<div class="gridLegends"></div>
+						<div class="siteDistanceLegends"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 地图切换管理 -->
+		<div class = "mapTypeManager">
+			<div class="bing-map">
+				<div class="type-box Road-bing">
+					<div class = "type-img"><img title="Road" src="resource/img/iconBlue/road.png"></div>
+				</div>
+				<div class="type-box Hybrid-bing">
+					<div class = "type-img"><img title="Hybrid" src="resource/img/iconBlue/hybrid.png"></div>
+				</div>
+				<div class="type-box Aerial-bing">
+					<div class = "type-img"><img title="Aerial" src="resource/img/iconBlue/satelite.png"></div>
+				</div>
+			</div>
+			
+			<div class="google-map">
+				<div class="type-box Road-google">
+					<div class = "type-img"><img title="Road" src="resource/img/iconBlue/road.png"></div>
+				</div>
+				<div class="type-box Hybrid-google">
+					<div class = "type-img"><img title="Hybrid" src="resource/img/iconBlue/hybrid.png"></div>
+				</div>
+				<div class="type-box Satellite-google">
+					<div class = "type-img"><img title="Satellite" src="resource/img/iconBlue/satelite.png"></div>
+				</div>	
+				<div class="type-box Terrain-google">
+					<div class = "type-img"><img title="Terrain" src="resource/img/iconBlue/terrain.png"></div>
+				</div>	
+			</div>
+		</div>
+		<div class = "mapManager gisStyleGray">
+			<div class = "mapZoomIn"><img title="放大地图" src="resource/img/iconBlue/zoom_in.png"></div>
+			<div class = "mapZoomOut"><img title="缩小地图" src="resource/img/iconBlue/zoom_out.png"></div>
+			<div class = "normManager">
+				<div class = "icon"><img title="指标管理" src="resource/img/iconBlue/norm_switch.png"></div>
+				<div class="con gisStyleGray">
+					<jsp:include page="jsp/norm.jsp" flush="true" />
+				</div>
+			</div>
+		</div>
+		<div class = "sitesDistance" id="sitesDistance"></div>
+	  	<!-- 左上角信息框  -->
+	    <jsp:include page="jsp/leftTopCommonInformation.jsp" flush="true" />
+    </div>
+  </div>
+    <!-- 显示小区，小区对象组增加小区服务 -->
+    <jsp:include page="jsp/poplayerRight.jsp" flush="true" />
+    <!-- 浮动层 -->
+    <div class="maskDiv"></div>
+    <div class="tips gisStyleGray">
+   		<div class = "title">
+   			<div class = "titleCon"></div>
+   			<div class = "titleClose"></div>
+   		</div>
+   		<div class="content">
+   			
+   		</div>
+   	</div>
+   	<div class="alertMaskDiv"></div>
+    <div class="alert gisStyleGray">
+   		<div class = "title">
+   			<div class = "titleCon">提示</div>
+   			<div class = "titleClose"></div>
+   		</div>
+   		<div class="content">
+   			<div class="con">请先选择网元!!!!!!!!!!!!!!!!!!!!!</div>
+   			<div class="okDiv"><input type="button" value="确定" class="btn"/></div>
+   			
+   		</div>
+   	</div>
+   	<div id = "cellImg" style="position: fixed; display:none;z-index:1200;padding:5px;">
+   		<div class="mouseCon" style = "height: 35px;">
+   			<img src="resource/img/iconBlue/cellIcon.png">
+   		</div>
+   		<div class="mouseTips"></div>
+   	</div>
+   	<div class="mouseoverTips showCellSelectTips"></div>
+   	<div id="fixTips" style="position: fixed; top: 0; width: 100%;height: 20px;background-color: white;text-align: center;display: none;z-index:12000;"></div>
+  </body>
+</html>
