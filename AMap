@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>OpenLayers加载高德地图</title>
+<link rel="stylesheet" href="http://openlayers.org/dev/theme/default/style.css" type="text/css">
+        <link rel="stylesheet" href="http://openlayers.org/dev/examples/style.css" type="text/css">
+        <!--<script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>-->
+        <script src="http://openlayers.org/api/OpenLayers.js"></script>
+<script type="text/javascript">
+var map, layer,marker;
+var layerOptions=null;
+
+
+var EvilTransform = EvilTransform || function() {
+   pi = 3.14159265358979324;
+   a = 6378245.0;
+   ee = 0.00669342162296594323;
+   // World Geodetic System ==> Mars Geodetic System
+   this.transform = function(wgLat, wgLon) {
+    if (this.outOfChina(wgLat, wgLon)) {
+     mgLat = wgLat;
+     mgLon = wgLon;
+     return;
+    }
+    dLat = this.transformLat(wgLon - 105.0, wgLat - 35.0);
+    dLon = this.transformLon(wgLon - 105.0, wgLat - 35.0);
+    radLat = wgLat / 180.0 * pi;
+    magic = Math.sin(radLat);
+    magic = 1 - ee * magic * magic;
+    sqrtMagic = Math.sqrt(magic);
+    dLat = (dLat * 180.0)
+      / ((a * (1 - ee)) / (magic * sqrtMagic) * pi);
+    dLon = (dLon * 180.0) / (a / sqrtMagic * Math.cos(radLat) * pi);
+    mgLat = wgLat + dLat;
+    mgLon = wgLon + dLon;
+    return new OpenLayers.LonLat(mgLon,mgLat);
+   };
+   this.outOfChina = function(lat, lon) {
+    if (lon < 72.004 || lon > 137.8347)
+     return false;
+    if (lat < 0.8293 || lat > 55.8271)
+     return false;
+    return false;
+   };
+   this.transformLat = function(x, y) {
+    var ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x
+      * y + 0.2 * Math.sqrt(Math.abs(x));
+    ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x
+      * pi)) * 2.0 / 3.0;
+    ret += (20.0 * Math.sin(y * pi) + 40.0 * Math.sin(y / 3.0 * pi)) * 2.0 / 3.0;
+    ret += (160.0 * Math.sin(y / 12.0 * pi) + 320 * Math.sin(y * pi
+      / 30.0)) * 2.0 / 3.0;
+    return ret;
+   };
+   this.transformLon = function(x, y) {
+    var ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1
+      * Math.sqrt(Math.abs(x));
+    ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x
+      * pi)) * 2.0 / 3.0;
+    ret += (20.0 * Math.sin(x * pi) + 40.0 * Math.sin(x / 3.0 * pi)) * 2.0 / 3.0;
+    ret += (150.0 * Math.sin(x / 12.0 * pi) + 300.0 * Math.sin(x
+      / 30.0 * pi)) * 2.0 / 3.0;
+    return ret;
+   };
+  };
+
+function init(){
+//map = new OpenLayers.Map('map');
+map = new OpenLayers.Map({
+ div: "map",
+ projection: "EPSG:900913"  //指定投影很关键
+ //,displayProjection: new OpenLayers.Projection("EPSG:4326")
+});
+
+var gdLayer = new OpenLayers.Layer.XYZ("AMap", [  
+                      "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x=${x}&y=${y}&z=${z}",  
+                       "http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x=${x}&y=${y}&z=${z}",  
+                        "http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x=${x}&y=${y}&z=${z}",  
+                        "http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x=${x}&y=${y}&z=${z}"  
+        ], {  
+            isBaseLayer: true,  
+            visibility: true,  
+            displayInLayerSwitcher: true  
+        });  
+map.addLayer(gdLayer);
+map.addControl(new OpenLayers.Control.LayerSwitcher());
+var lonlat=new OpenLayers.LonLat(121.49491, 31.24169);
+//var eviltf = new EvilTransform();
+//var lonlat = eviltf.transform(31.24169,121.49491);
+  //alert( map.getProjectionObject()); //当前是EPSG:900913投影
+var lonlat2 = lonlat.clone().transform( new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject() );//转换投影
+map.setCenter(lonlat2, 15);//指定地图中心与初始缩放级别
+map.addControl(new OpenLayers.Control.MousePosition()); 
+
+var features = [];
+features.push(new OpenLayers.Feature.Vector(
+	new OpenLayers.Geometry.Point(lonlat2.lon, lonlat2.lat), {x: lonlat2.lon, y: lonlat2.lat}));
+
+var style = new OpenLayers.Style({
+                    pointRadius: "10px",
+                    fillColor: "#ffcc66",
+                    fillOpacity: 0.8,
+                    strokeColor: "#cc6633",
+                    strokeWidth: "2px",
+                    strokeOpacity: 0.8
+                });
+var vectorLayer = new OpenLayers.Layer.Vector("Clusters", {
+                    styleMap: new OpenLayers.StyleMap({
+                        "default": style,
+                        
+                        }
+                    )}
+					);
+vectorLayer.addFeatures(features);
+map.addLayer( vectorLayer );
+}
+
+</script>
+<body onload="init()">
+<div id="map" style="position:relative;width: 100%;height: 100%;border: 1px solid #ccc;">
+</div>
+</body>
+</html>
